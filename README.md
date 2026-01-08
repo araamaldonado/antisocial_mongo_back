@@ -8,6 +8,9 @@ El mismo fue realizado para el front de dicha red social, el cual podrás visual
 - Docker
 - MongoDB
 - Javascript
+
+## Frameworks:
+
 - Redis
 - Joi
 - CORS para conectarse al front.
