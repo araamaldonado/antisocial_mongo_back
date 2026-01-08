@@ -1,0 +1,453 @@
+openapi: 3.0.0
+info:
+  title: Anti-Social Net API
+  description: API documental del trabajo práctico de UnaHur
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+paths:
+
+  ######################
+  #       USERS        #
+  ######################
+  /user:
+    get:
+      summary: Obtener todos los usuarios
+      tags: [User]
+      responses:
+        "200":
+          description: Lista de usuarios
+    post:
+      summary: Crear un nuevo usuario
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Usuario creado correctamente
+        "400":
+          description: Error de validación del esquema
+        "409":
+          description: Conflicto — Mail o nickname ya existentes
+
+  /user/{id}:
+    get:
+      summary: Obtener usuario por ID
+      tags: [User]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6730fb845d8343b14d545ad9
+      responses:
+        "200":
+          description: Usuario encontrado
+        "404":
+          description: Usuario no encontrado
+    put:
+      summary: Actualizar usuario por ID
+      tags: [User]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Usuario actualizado correctamente
+        "404":
+          description: Usuario no encontrado
+    delete:
+      summary: Eliminar usuario por ID
+      tags: [User]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario eliminado correctamente
+
+  /user/login/{nickname}:
+    get:
+      summary: Obtener usuario por nickname
+      tags: [User]
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario encontrado
+        "404":
+          description: Usuario no encontrado
+
+  ######################
+  #        TAGS        #
+  ######################
+  /tag:
+    get:
+      summary: Obtener todos los tags
+      tags: [Tag]
+      responses:
+        "200":
+          description: Lista de tags
+    post:
+      summary: Crear un nuevo tag
+      tags: [Tag]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+      responses:
+        "201":
+          description: Tag creado correctamente
+        "409":
+          description: Tag ya existente
+
+  /tag/{id}:
+    get:
+      summary: Obtener tag por ID
+      tags: [Tag]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tag encontrado
+        "404":
+          description: Tag no encontrado
+    put:
+      summary: Actualizar tag por ID
+      tags: [Tag]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+      responses:
+        "200":
+          description: Tag actualizado correctamente
+    delete:
+      summary: Eliminar tag por ID
+      tags: [Tag]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tag eliminado correctamente
+
+  ######################
+  #       POSTS        #
+  ######################
+  /post:
+    get:
+      summary: Obtener todos los posts
+      tags: [Post]
+      responses:
+        "200":
+          description: Lista de posts
+    post:
+      summary: Crear un nuevo post
+      tags: [Post]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "201":
+          description: Post creado correctamente
+
+  /post/{id}:
+    get:
+      summary: Obtener post por ID
+      tags: [Post]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post encontrado
+        "404":
+          description: Post no encontrado
+    put:
+      summary: Actualizar post por ID
+      tags: [Post]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "200":
+          description: Post actualizado correctamente
+    delete:
+      summary: Eliminar post por ID
+      tags: [Post]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post eliminado correctamente
+
+  /post/user/{id}:
+    get:
+      summary: Obtener posts por ID de usuario
+      tags: [Post]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de posts del usuario
+
+  ######################
+  #     POST IMAGE     #
+  ######################
+  /image:
+    get:
+      summary: Obtener todas las imágenes de posts
+      tags: [PostImage]
+      responses:
+        "200":
+          description: Lista de imágenes
+    post:
+      summary: Crear una nueva imagen
+      tags: [PostImage]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostImage"
+      responses:
+        "201":
+          description: Imagen creada correctamente
+
+  /image/{id}:
+    get:
+      summary: Obtener imagen por ID
+      tags: [PostImage]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Imagen encontrada
+    put:
+      summary: Actualizar imagen por ID
+      tags: [PostImage]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostImage"
+      responses:
+        "200":
+          description: Imagen actualizada correctamente
+    delete:
+      summary: Eliminar imagen por ID
+      tags: [PostImage]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Imagen eliminada correctamente
+
+  ######################
+  #     COMMENTS       #
+  ######################
+  /comment:
+    get:
+      summary: Obtener todos los comentarios visibles
+      tags: [Comment]
+      responses:
+        "200":
+          description: Lista de comentarios
+    post:
+      summary: Crear un nuevo comentario
+      tags: [Comment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        "201":
+          description: Comentario creado correctamente
+
+  /comment/{id}:
+    get:
+      summary: Obtener comentario por ID
+      tags: [Comment]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comentario encontrado
+        "404":
+          description: Comentario no encontrado
+    put:
+      summary: Actualizar comentario por ID
+      tags: [Comment]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        "200":
+          description: Comentario actualizado correctamente
+    delete:
+      summary: Eliminar comentario por ID
+      tags: [Comment]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comentario eliminado correctamente
+
+components:
+  schemas:
+
+    User:
+      type: object
+      properties:
+        nickname:
+          type: string
+          example: aracelim
+        mail:
+          type: string
+          example: araceli@mail.com
+
+    Tag:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: arte
+
+    Post:
+      type: object
+      properties:
+        texto:
+          type: string
+          example: "Mi primer publicación"
+        user:
+          type: string
+          example: 6730fb845d8343b14d545ad9
+        tags:
+          type: array
+          items:
+            type: string
+            example: 6730fb845d8343b14d545ad9
+        images:
+          type: array
+          items:
+            type: string
+            example: 6730fb845d8343b14d545ad9
+
+    PostImage:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://ejemplo.com/imagen.jpg"
+
+    Comment:
+      type: object
+      properties:
+        user:
+          type: string
+          example: 6730fb845d8343b14d545ad9
+        post:
+          type: string
+          example: 6730fb845d8343b14d545ad9
+        texto:
+          type: string
+          example: "Excelente publicación"
