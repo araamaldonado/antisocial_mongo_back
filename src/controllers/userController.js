@@ -1,5 +1,6 @@
 const { User } = require("../models/user");
 const { client } = require("../config/redisClient");
+const { registerUser, login } = require("../services/auth.service")
 
 const KEY_ALL = "users : all";
 const keyOne = (id) => `users:${id}`;
@@ -16,7 +17,7 @@ const getUser = async (req, res) => {
     await client.set(KEY_ALL, JSON.stringify(users), { EX: 60 });
     res.status(200).json({ users });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -34,7 +35,7 @@ const getUserById = async (req, res) => {
     await client.set(key, JSON.stringify(userFound), { EX: 60 });
     res.status(200).json(userFound);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -42,20 +43,35 @@ const getUserByNickname = async (req, res) => {
   try {
     const nickname = req.params.nickname;
     const user = await User.findOne({ nickname });
+    
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const createUser = async (req, res) => {
   try {
-    const { nickname, mail } = req.body;
     await client.del(KEY_ALL);
-    const newUser = await User.create({ nickname, mail });
+
+    const newUser = await registerUser(req.body);
+
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(400).send({ message: error.message });
+  }
+};
+
+const logearUser = async (req, res) => {
+  try {
+
+    const { nickname, password } = req.body;
+
+    const user = await login(nickname, password)
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(401).send({ message: error.message || "Credenciales inválidas" });
   }
 };
 
@@ -71,20 +87,24 @@ const updateUser = async (req, res) => {
     await client.del(key);
     res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
+
     const key = keyOne(id);
-    const deletedUser = await User.findByIdAndDelete(id);
+
+    await User.findByIdAndDelete(id);
+
     await client.del(KEY_ALL);
     await client.del(key);
+
     res.status(200).json({ message: "Usuario eliminado correctamente" });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -95,4 +115,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  logearUser
 };

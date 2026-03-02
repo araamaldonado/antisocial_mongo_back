@@ -12,6 +12,10 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: [isEmail, "Email inválido"]
+    },
+    password: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 

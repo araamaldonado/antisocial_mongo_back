@@ -10,7 +10,6 @@ const validarUserByNickname = async (req, res, next) => {
 
   const found = await User.findOne({ nickname });
   if (!found) {
-    console.log("a");
     res
       .status(404)
       .json({ error_message: `El nickname ${nickname} no fue encontrado` });
@@ -51,7 +50,6 @@ const existMail = async (req, res, next) => {
 const validarSchemaUser = (req, res, next) => {
   const { error, _ } = genericSchemaValidator(userSchema, req.body);
   if (error) {
-    console.log("a");
     return res.status(400).json({
       errores: error.details.map((e) => ({
         attributo: e.path[0],

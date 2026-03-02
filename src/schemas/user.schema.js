@@ -10,6 +10,12 @@ const userSchema = Joi.object({
     "string.email": "El mail debe tener un formato válido",
     "any.required": "El atributo mail tiene que existir",
   }),
+  password: Joi.string().min(8).max(128).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/).required().messages({
+    "string.empty": "Lacontraseña es obligatoria",
+    "any.required": "La contraseña es obligatoria",
+    "string.pattern.base":
+      "La contraseña debe contener al menos una mayúscula, una minúscula y un número"
+  })
 }).options({
   allowUnknown: true, // permite otros campos como createdAt, __v, etc.
 });
