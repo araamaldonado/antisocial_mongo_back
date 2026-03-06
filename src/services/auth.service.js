@@ -26,7 +26,7 @@ const login = async (nickname, password) => {
     nickname: user.nickname,
   }
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30s" })
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" })
 
   // 3. Retornar usuario SIN password
   return {

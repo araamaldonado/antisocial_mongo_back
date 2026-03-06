@@ -1,12 +1,14 @@
 const jwt = require("jsonwebtoken");
 
-export const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
 
   if (!authHeader) {
     return res.status(401).json({ message: "Token no provisto" });
   }
+
+  // SEGUIR CORRIGIENDO QUE EL TOKEN CIERRE EFECTIVAMENTE LA SESION
 
   const token = authHeader.split(" ")[1];
 
@@ -18,3 +20,5 @@ export const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Token invalido o expirado" })
   }
 }
+
+module.exports = {verifyToken}

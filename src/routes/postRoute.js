@@ -20,12 +20,14 @@ const {
   validarSchemaPostTagImage,
 } = require("../middlewares/postMiddlewares");
 
-router.get("/", getPosts);
-router.get("/user/:id", validarUserId, getPostsByUserId);
+const { verifyToken } = require("../middlewares/authJwtMiddleware");
+
+router.get("/", verifyToken, getPosts);
+router.get("/user/:id", verifyToken, validarUserId, getPostsByUserId);
 router.get("/:id", validarPostId, getPostById);
-router.post("/", validarSchemaPostTagImage, createPost);
-router.put("/:id", validarPostId, validarSchemaPost, updatePost);
-router.delete("/:id", validarPostId, deletePost);
+router.post("/", verifyToken, validarSchemaPostTagImage, createPost);
+router.put("/:id", verifyToken, validarPostId, validarSchemaPost, updatePost);
+router.delete("/:id", verifyToken, validarPostId, deletePost);
 
 //Borrar imagen de post
 router.delete("/:id/image/:imageId", validarPostId, deleteImage);

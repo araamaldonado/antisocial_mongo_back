@@ -16,15 +16,16 @@ const {
   deleteUser,
   logearUser
 } = require("../controllers/userController");
+const { verifyToken } = require("../middlewares/authJwtMiddleware");
 
 router.get("/", getUser);
 router.get("/:id", validarUserById, getUserById);
-router.post("/login", logearUser); //completar
+router.post("/login", logearUser); 
 
-router.get("/profile/:nickname", validarUserByNickname, getUserByNickname);
+router.get("/profile/:nickname", verifyToken, validarUserByNickname, getUserByNickname);
 
 router.post("/", validarSchemaUser, existMail, existUserName, createUser);
-router.put("/:id", validarUserById, existUserName, updateUser);
-router.delete("/:id", validarUserById, deleteUser);
+router.put("/:id", verifyToken,validarUserById, existUserName, updateUser);
+router.delete("/:id", verifyToken,validarUserById, deleteUser);
 
 module.exports = router;
