@@ -21,7 +21,9 @@ const postsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
+    },
+    {timestamps: true}
+    )
 
 postsSchema.pre('remove', async function(next) {
     const Comment = require("./comment");

@@ -18,7 +18,8 @@ const getPosts = async (req, res) => {
       .populate("user", "nickname mail")
       .populate("tags", "nombre")
       .populate("images", "url")
-      .lean();
+      .lean()
+      .sort({ createdAt: -1 });
 
     const comments = await Comment.find().select("_id post").lean();
 
