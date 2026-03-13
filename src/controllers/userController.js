@@ -67,9 +67,19 @@ const logearUser = async (req, res) => {
 
     const { nickname, password } = req.body;
 
-    const user = await login(nickname, password)
+    const { user, accessToken, refreshToken } = await login(nickname, password)
 
-    res.status(200).json(user);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+
+    res.status(200).json({
+      user,
+      token: accessToken
+    });
   } catch (error) {
     res.status(401).send({ message: error.message || "Credenciales inválidas" });
   }

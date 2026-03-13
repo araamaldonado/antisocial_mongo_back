@@ -6,6 +6,7 @@ const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser")
 
 // Conexion a db:
 const connectToDataBase = require("./config/db");
@@ -28,12 +29,16 @@ app.use(
 // Utilizar JSON:
 app.use(express.json());
 
+// Utilizar parseo de Cookies
+app.use(cookieParser())
+
 // Rutas:
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
 const tagRoute = require("./routes/tagRoute");
 const commentRoute = require("./routes/commentRoute");
 const imageRoute = require("./routes/postImageRoute");
+const authRoute = require("./routes/authRoute")
 
 // Endpoints:
 app.use("/user", userRoute);
@@ -41,6 +46,7 @@ app.use("/post", postRoute);
 app.use("/tag", tagRoute);
 app.use("/comment", commentRoute);
 app.use("/image", imageRoute);
+app.use("/auth", authRoute)
 
 // Configuración del Swagger:
 const swaggerDocument = YAML.load(path.join(__dirname, "./docs/swagger.yaml"));

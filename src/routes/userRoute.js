@@ -20,7 +20,7 @@ const { verifyToken } = require("../middlewares/authJwtMiddleware");
 
 router.get("/", getUser);
 router.get("/:id", validarUserById, getUserById);
-router.post("/login", logearUser); 
+router.post("/login", logearUser);  // FALTA MIDDLEWARE, SEPARA RESPONSABILIDADES
 
 router.get("/profile/:nickname", verifyToken, validarUserByNickname, getUserByNickname);
 
