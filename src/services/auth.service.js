@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models/user");
+const { Session } = require("../models/sessions")
+const jwt = require("jsonwebtoken")
 const { generateAccessToken, 
     generateRefreshToken } = require("../utils/token")
 
@@ -26,13 +28,23 @@ const login = async (nickname, password) => {
   }
 
   const accessToken = generateAccessToken(user)
-  const refreshToken = generateRefreshToken(user)
+
+  const newSession = await Session.create({
+    userId: user._id,
+    refreshToken: "temp",
+    expiresAt: new Date(Date.now() + 7*24*60*60*1000)
+  })
+
+  const refreshToken = generateRefreshToken(user, newSession)
+
+  newSession.refreshToken = refreshToken
+  await newSession.save()
 
   // 3. Retornar usuario SIN password
   return {
     user: {
       _id: user._id,
-    nickname: user.nickname,
+    nickname: user.nickname, 
     mail: user.mail,
     },
     accessToken
@@ -41,4 +53,16 @@ const login = async (nickname, password) => {
   };
 };
 
-module.exports = { registerUser, login };
+const logout = async (refreshToken) => {
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+
+    await Session.findByIdAndDelete(decoded.sessionId)
+
+  } catch (error) {
+
+  }
+}
+
+module.exports = { registerUser, login, logout };

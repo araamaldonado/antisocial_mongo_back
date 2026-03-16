@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const userSchema = Joi.object({
-  nickname: Joi.string().required().messages({
+  nickname: Joi.string().trim().min(5).max(30).required().messages({
     "string.empty": "El nickname no puede estar vacio",
     "any.required": "El atributo nickname tiene que existir",
   }),

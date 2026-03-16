@@ -1,6 +1,6 @@
 const { User } = require("../models/user");
 const { client } = require("../config/redisClient");
-const { registerUser, login } = require("../services/auth.service")
+const { registerUser, login, logout } = require("../services/auth.service")
 
 const KEY_ALL = "users : all";
 const keyOne = (id) => `users:${id}`;
@@ -78,12 +78,33 @@ const logearUser = async (req, res) => {
 
     res.status(200).json({
       user,
-      token: accessToken
+      accessToken
     });
   } catch (error) {
     res.status(401).send({ message: error.message || "Credenciales inválidas" });
   }
 };
+
+const logoutController = async (req, res) => {
+
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken){
+      return res.status(204)
+    }
+
+    await logout(refreshToken)
+
+    res.clearCookie("refreshToken")
+
+    res.sendStatus(204)
+  } catch (error) {
+    res.clearCookie("refreshToken")
+    res.status(500).json({ message: "Error al cerrar sesión" })
+  }
+
+}
 
 const updateUser = async (req, res) => {
   try {
@@ -125,5 +146,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  logearUser
+  logearUser,
+  logoutController
 };

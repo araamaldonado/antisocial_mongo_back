@@ -18,6 +18,29 @@ const validarUserByNickname = async (req, res, next) => {
   next();
 };
 
+const verifyLoginCredentials = async (req, res, next) => {
+  try {
+    const { nickname, password } = req.body;
+
+    const nicknameSanitizado = nickname?.trim().toLowerCase()
+
+    if (!nicknameSanitizado){
+      return res.status(400).json({ message: "Ingrese un nickname válido" })
+    }
+
+    if (!password || password.length < 8){
+      return res.status(400).json({ message: "Ingrese una contraseña válida" })
+    }
+
+    req.body.nickname = nicknameSanitizado 
+
+    next()
+
+  } catch (error) {
+    res.status(401).json({ message: "Error al validar las credenciales" })
+  }
+}
+
 const existUserName = async (req, res, next) => {
   try {
     const { nickname } = req.body;
@@ -66,4 +89,5 @@ module.exports = {
   validarUserById,
   validarUserByNickname,
   existMail,
+  verifyLoginCredentials
 };

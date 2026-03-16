@@ -8,8 +8,6 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Token no provisto" });
   }
 
-  // SEGUIR CORRIGIENDO QUE EL TOKEN CIERRE EFECTIVAMENTE LA SESION
-
   const token = authHeader.split(" ")[1];
 
   try {
