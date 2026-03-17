@@ -100,6 +100,7 @@ const logoutController = async (req, res) => {
 
     res.sendStatus(204)
   } catch (error) {
+    console.log("asdasdsa")
     res.clearCookie("refreshToken")
     res.status(500).json({ message: "Error al cerrar sesión" })
   }

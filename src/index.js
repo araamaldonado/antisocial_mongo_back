@@ -7,6 +7,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
+const rateLimit = require('express-rate-limit')
 
 // Conexion a db:
 const connectToDataBase = require("./config/db");
@@ -31,6 +32,36 @@ app.use(express.json());
 
 // Utilizar parseo de Cookies
 app.use(cookieParser())
+
+// Declaración Rate Limit para Login y Registro
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    message: "Demasiado intentos desde esta IP, por favor vuelva a intentar en 15 minutos"
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Declaración Rate Limit general
+const generalLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 100,
+  message: {
+    message: "¡Tranquilo! estás haciendo demasiadas peticiones."
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Aplicación de RateLimit a todas las peticiones
+app.use('api', generalLimiter)
+
+// Aplicación de RateLimit estricto a las auth
+app.use('/user/login', authLimiter)
+app.use('/user/register', authLimiter)
+app.use('/auth/refresh', authLimiter)
 
 // Rutas:
 const userRoute = require("./routes/userRoute");

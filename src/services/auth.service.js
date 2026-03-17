@@ -58,7 +58,11 @@ const logout = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
 
+        console.log("llego")
+
     await Session.findByIdAndDelete(decoded.sessionId)
+
+
 
   } catch (error) {
 
