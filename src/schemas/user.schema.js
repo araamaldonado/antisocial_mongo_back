@@ -11,8 +11,10 @@ const userSchema = Joi.object({
     "any.required": "El atributo mail tiene que existir",
   }),
   password: Joi.string().min(8).max(128).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/).required().messages({
-    "string.empty": "Lacontraseña es obligatoria",
+    "string.empty": "La contraseña es obligatoria",
     "any.required": "La contraseña es obligatoria",
+    "string.min": "La contraseña debe tener mínimo 8 caracteres",
+    "string.max": "La contraseña debe tener máximo 128 caracteres",
     "string.pattern.base":
       "La contraseña debe contener al menos una mayúscula, una minúscula y un número"
   })

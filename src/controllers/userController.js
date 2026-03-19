@@ -58,7 +58,12 @@ const createUser = async (req, res) => {
 
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).send({ message: error.message });
+    res.status(400).json({
+      errores: [{ 
+        attributo: "registro", 
+        detalle: error.message || "Error interno en el servidor" 
+      }]
+    });
   }
 };
 
@@ -81,7 +86,7 @@ const logearUser = async (req, res) => {
       accessToken
     });
   } catch (error) {
-    res.status(401).send({ message: error.message || "Credenciales inválidas" });
+    res.status(401).json({ message: error.message || "Credenciales inválidas" });
   }
 };
 
